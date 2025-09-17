@@ -1,0 +1,952 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Opinion - Prime Daily News</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0a0a0f 0%, #1a0033 50%, #000428 100%);
+            color: #ffffff;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+       /* Animated Background Particles */
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .particle {
+            position: absolute;
+            background: radial-gradient(circle, #00ffcc 0%, transparent 50%);
+            border-radius: 50%;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .particle:nth-child(even) {
+            background: radial-gradient(circle, #ff00ff 0%, transparent 50%);
+            animation-delay: -3s;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); opacity: 0.3; }
+            50% { transform: translateY(-20px) rotate(180deg); opacity: 0.7; }
+        }
+
+        /* Header */
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(10, 10, 15, 0.9);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 1rem 0;
+            z-index: 1000;
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            background: linear-gradient(135deg, #00ffcc, #ff00ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-size: 1.8rem;
+            font-weight: bold;
+            letter-spacing: 2px;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            color: #b0b0b0;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .nav-links a:hover {
+            color: #00ffcc;
+            text-shadow: 0 0 10px #00ffcc;
+        }
+
+        .nav-links a.active {
+            color: #00ffcc;
+        }
+
+        .section-title {
+            font-size: 1.8rem;
+            margin-bottom: 2rem;
+            position: relative;
+            padding-left: 20px;
+        }
+
+        /* Main Content */
+        /* .main-content {
+            margin-top: 100px;
+            position: relative;
+            z-index: 2;
+        } */
+
+        /* Comments Section */
+        .comments-section {
+            margin-top: 4rem;
+            margin-bottom: 4rem;
+            background: var(--glass-bg);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        .comment-form {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 2rem;
+            margin-bottom: 3rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .comment-form {
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 15px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .comment-form::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+          
+        }
+
+        .comment-form-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .form-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .comment-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #00ffcc, #ff00ff);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            color: #000;
+        }
+
+        .form-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+            background: linear-gradient(135deg, #00ffcc, #ff00ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #ffffff;
+            font-weight: 500;
+        }
+
+        .form-input, .form-textarea {
+            width: 100%;
+            padding: 0.8rem 1rem;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            color: #ffffff;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-input:focus, .form-textarea:focus {
+            outline: none;
+            border-color: #00ffcc;
+            background: rgba(255, 255, 255, 0.15);
+            box-shadow: 0 0 20px rgba(0, 255, 204, 0.2);
+        }
+
+        .form-input::placeholder, .form-textarea::placeholder {
+            color: #888;
+        }
+
+        .form-textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        .submit-btn {
+            background: linear-gradient(135deg, #00ffcc, #ff00ff);
+            color: #000;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 25px;
+            font-weight: bold;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0, 255, 204, 0.3);
+        }
+
+        .submit-btn:active {
+            transform: translateY(0);
+        }
+
+        /* Comments Display */
+        .comments-display {
+            margin-top: 3rem;
+        }
+
+        .comments-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        
+        .sort-select {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            color: #ffffff;
+            padding: 0.5rem 1rem;
+            cursor: pointer;
+        }
+
+        .comment-item {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .comment-item:hover {
+            border-color: rgba(0, 255, 204, 0.3);
+            transform: translateX(5px);
+        }
+
+        .comment-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .commenter-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #00ffcc, #ff00ff);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: #000;
+            font-size: 1.2rem;
+        }
+
+        .commenter-info h6 {
+            color: #ffffff;
+            font-size: 1rem;
+            margin-bottom: 0.2rem;
+        }
+
+        .comment-date {
+            color: #b0b0b0;
+            font-size: 0.8rem;
+        }
+
+        .comment-actions {
+            margin-left: auto;
+            display: flex;
+            gap: 1rem;
+        }
+
+        .action-btn {
+            background: none;
+            border: none;
+            color: #b0b0b0;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+            padding: 0.3rem 0.5rem;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+        }
+
+        .action-btn:hover {
+            color: #00ffcc;
+            background: rgba(0, 255, 204, 0.1);
+        }
+
+        .action-btn.liked {
+            color: #ff00ff;
+        }
+
+        .comment-text {
+            color: #e0e0e0;
+            line-height: 1.6;
+            margin-bottom: 1rem;
+        }
+
+        .reply-section {
+            margin-left: 2rem;
+            margin-top: 1rem;
+            padding-left: 1rem;
+            border-left: 2px solid rgba(0, 255, 204, 0.3);
+        }
+
+        .reply-form {
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 10px;
+            padding: 1rem;
+            margin-top: 1rem;
+            display: none;
+        }
+
+        .reply-form.active {
+            display: block;
+            animation: slideDown 0.3s ease;
+        }
+
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .reply-input {
+            width: 100%;
+            padding: 0.8rem;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            color: #ffffff;
+            margin-bottom: 1rem;
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        .reply-buttons {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .reply-submit, .reply-cancel {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .reply-submit {
+            background: linear-gradient(135deg, #00ffcc, #ff00ff);
+            color: #000;
+        }
+
+        .reply-cancel {
+            background: rgba(255, 255, 255, 0.1);
+            color: #ffffff;
+        }
+
+       /* Footer */
+.footer {
+    padding: 2rem;
+    margin-top: 4rem;
+}
+
+.footer-content {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.footer-card {
+    background: rgba(10, 10, 15, 0.9);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 20px;
+    padding: 3rem 2rem 2rem;
+    text-align: center;
+}
+
+.footer-logo {
+    background: linear-gradient(135deg, #00ffcc, #ff00ff);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    font-size: 2rem;
+    font-weight: bold;
+    letter-spacing: 2px;
+    margin-bottom: 1rem;
+}
+
+.footer-text {
+    color: #b0b0b0;
+    margin-bottom: 2rem;
+}
+
+.footer-links {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    margin-bottom: 2rem;
+}
+
+.footer-links a {
+    color: #b0b0b0;
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+.footer-links a:hover {
+    color: #00ffcc;
+    text-shadow: 0 0 10px #00ffcc;
+}
+
+.copyright {
+    color: #666;
+    font-size: 0.9rem;
+}
+
+        /* Mobile Responsiveness */
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+
+            .hero-title {
+                font-size: 2.5rem;
+                letter-spacing: 2px;
+            }
+
+            .opinions-grid {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+
+            .featured-title {
+                font-size: 1.5rem;
+            }
+
+            .filter-buttons {
+                gap: 0.5rem;
+            }
+
+            .footer-links {
+                flex-wrap: wrap;
+                gap: 1rem;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .comments-header {
+                flex-direction: column;
+                gap: 1rem;
+                align-items: flex-start;
+            }
+
+            .reply-section {
+                margin-left: 1rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .nav-container {
+                padding: 0 1rem;
+            }
+
+            .hero {
+                padding: 3rem 1rem 2rem;
+            }
+
+            .opinion-content {
+                padding: 0 1rem;
+            }
+
+            .featured-card, .opinion-card, .comment-form {
+                padding: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+   <!-- Animated Background Particles -->
+    <div class="particles"></div>
+
+    <!-- Header -->
+    <header class="header">
+        <nav class="nav-container">
+            <div class="logo">PRIME DAILY NEWS</div>
+            <ul class="nav-links">
+                <li><a href="Home page.html">Home</a></li>
+                <li><a href="#opinion" class="active">Opinion</a></li>
+                <li><a href="Subscribe.html">Subscribe</a></li>
+                <li><a href="contact-us.html">Contact us</a></li>
+                <li><a href="about.html">About us</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- Main Content -->
+    <!-- <main class="main-content"> -->
+            <!-- Comments Section -->
+        <section class="comments-section">
+            <h2 class="section-title">Share Your Opinion</h2><br>
+            <div class="comment-form">
+                <div class="comment-form-content">
+                    <div class="form-header">
+                        <div class="comment-icon">💬</div>
+                        <h3 class="form-title">Join the Conversation</h3>
+                    </div>
+                    
+                    <form id="commentForm">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="userName" class="form-label">Name *</label>
+                                <input type="text" id="userName" class="form-input" placeholder="Your name" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="userEmail" class="form-label">Email *</label>
+                                <input type="email" id="userEmail" class="form-input" placeholder="your@email.com" required>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="commentText" class="form-label">Your Opinion *</label>
+                            <textarea id="commentText" class="form-textarea" placeholder="Share your thoughts on this topic..." required></textarea>
+                        </div>
+                        
+                        <button type="submit" class="submit-btn">Post Opinion</button>
+                    </form>
+                </div>
+            </div>
+        </section>
+            <!-- Comments Display -->
+            <div class="comments-display">
+                <div class="comments-header">
+                    <select class="sort-select" id="sortComments">
+                        <option value="newest">Newest First</option>
+                        <option value="oldest">Oldest First</option>
+                        <option value="popular">Most Popular</option>
+                    </select>
+                </div>
+                <div id="commentsContainer">
+                      
+
+   <!-- Footer -->
+<footer class="footer">
+    <div class="footer-content">
+        <div class="footer-card">
+            <h3 class="footer-logo">PRIME DAILY NEWS</h3>
+            <p class="footer-text">Committed to delivering truth in the digital age</p>
+            <div class="footer-links">
+                <a href="#">About Us</a>
+                <a href="#">Privacy Policy</a>
+                <a href="#">Terms of Service</a>
+                <a href="#">Contact</a>
+            </div>
+            <p class="copyright">&copy; 2025 Prime Daily News. All rights reserved.</p>
+            <p class="copyright">Delivering truth with innovation since 2003</p>
+        </div>
+    </div>
+</footer>
+    <script>
+        // Comments array to store all comments
+        let comments = [];
+
+        // Generate floating particles
+        function createParticle() {
+            const particle = document.createElement('div');
+            particle.className = 'particle';
+            particle.style.left = Math.random() * 100 + '%';
+            particle.style.top = Math.random() * 100 + '%';
+            particle.style.width = Math.random() * 4 + 2 + 'px';
+            particle.style.height = particle.style.width;
+            particle.style.animationDuration = Math.random() * 3 + 3 + 's';
+            particle.style.animationDelay = Math.random() * 2 + 's';
+            
+            document.querySelector('.particles').appendChild(particle);
+        }
+
+        // Create initial particles
+        for (let i = 0; i < 50; i++) {
+            createParticle();
+        }
+
+        // Category filtering functionality
+        function initializeFilters() {
+            const filterButtons = document.querySelectorAll('.filter-btn');
+            const opinionCards = document.querySelectorAll('.opinion-card');
+            const featuredCard = document.querySelector('.featured-card');
+
+            filterButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    // Update active button
+                    filterButtons.forEach(btn => btn.classList.remove('active'));
+                    button.classList.add('active');
+
+                    const category = button.getAttribute('data-category');
+
+                    // Filter cards
+                    opinionCards.forEach(card => {
+                        if (category === 'all' || card.getAttribute('data-category') === category) {
+                            card.style.display = 'block';
+                            card.style.animation = 'fadeIn 0.5s ease';
+                        } else {
+                            card.style.display = 'none';
+                        }
+                    });
+
+                    // Handle featured card
+                    if (category === 'all' || featuredCard.getAttribute('data-category') === category) {
+                        featuredCard.parentElement.style.display = 'block';
+                    } else {
+                        featuredCard.parentElement.style.display = 'none';
+                    }
+                });
+            });
+        }
+
+        // Comment form submission
+        function initializeCommentForm() {
+            const commentForm = document.getElementById('commentForm');
+            
+            commentForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                
+                const userName = document.getElementById('userName').value;
+                const userEmail = document.getElementById('userEmail').value;
+                const commentText = document.getElementById('commentText').value;
+                
+                if (userName && userEmail && commentText) {
+                    addNewComment(userName, userEmail, commentText);
+                    commentForm.reset();
+                    
+                    // Show success message
+                    showNotification('Your opinion has been posted successfully!');
+                }
+            });
+        }
+
+        // Add new comment
+        function addNewComment(name, email, text) {
+            const newComment = {
+                id: Date.now(),
+                name: name,
+                email: email,
+                text: text,
+                timestamp: Date.now(),
+                likes: 0,
+                replies: []
+            };
+
+            const commentsContainer = document.getElementById('commentsContainer');
+            const commentElement = createCommentElement(newComment);
+            commentsContainer.insertBefore(commentElement, commentsContainer.firstChild);
+
+            // Update comment count
+            updateCommentCount();
+        }
+
+        // Create comment element
+        function createCommentElement(comment) {
+            const commentDiv = document.createElement('div');
+            commentDiv.className = 'comment-item';
+            commentDiv.setAttribute('data-timestamp', comment.timestamp);
+            
+            const initials = comment.name.split(' ').map(n => n[0]).join('').toUpperCase();
+            const timeAgo = getTimeAgo(comment.timestamp);
+            
+            commentDiv.innerHTML = `
+                <div class="comment-header">
+                    <div class="commenter-avatar">${initials}</div>
+                    <div class="commenter-info">
+                        <h6>${comment.name}</h6>
+                        <span class="comment-date">${timeAgo}</span>
+                    </div>
+                    <div class="comment-actions">
+                        <button class="action-btn like-btn" onclick="toggleLike(this)">
+                            ❤️ <span>${comment.likes}</span>
+                        </button>
+                        <button class="action-btn reply-btn" onclick="toggleReply(this)">
+                            💬 Reply
+                        </button>
+                    </div>
+                </div>
+                <div class="comment-text">${comment.text}</div>
+                <div class="reply-form">
+                    <textarea class="reply-input" placeholder="Write a reply..."></textarea>
+                    <div class="reply-buttons">
+                        <button class="reply-submit" onclick="submitReply(this)">Reply</button>
+                        <button class="reply-cancel" onclick="cancelReply(this)">Cancel</button>
+                    </div>
+                </div>
+            `;
+            
+            return commentDiv;
+        }
+
+        // Toggle like functionality
+        function toggleLike(button) {
+            const likeCount = button.querySelector('span');
+            let count = parseInt(likeCount.textContent);
+            
+            if (button.classList.contains('liked')) {
+                button.classList.remove('liked');
+                count--;
+            } else {
+                button.classList.add('liked');
+                count++;
+            }
+            
+            likeCount.textContent = count;
+        }
+
+        // Toggle reply form
+        function toggleReply(button) {
+            const commentItem = button.closest('.comment-item');
+            const replyForm = commentItem.querySelector('.reply-form');
+            
+            if (replyForm.classList.contains('active')) {
+                replyForm.classList.remove('active');
+            } else {
+                // Close other reply forms
+                document.querySelectorAll('.reply-form.active').forEach(form => {
+                    form.classList.remove('active');
+                });
+                replyForm.classList.add('active');
+                replyForm.querySelector('.reply-input').focus();
+            }
+        }
+
+        // Submit reply
+        function submitReply(button) {
+            const replyForm = button.closest('.reply-form');
+            const replyInput = replyForm.querySelector('.reply-input');
+            const replyText = replyInput.value.trim();
+            
+            if (replyText) {
+                const commentItem = replyForm.closest('.comment-item');
+                let replySection = commentItem.querySelector('.reply-section');
+                
+                if (!replySection) {
+                    replySection = document.createElement('div');
+                    replySection.className = 'reply-section';
+                    commentItem.insertBefore(replySection, replyForm);
+                }
+                
+                const replyElement = createReplyElement(replyText);
+                replySection.appendChild(replyElement);
+                
+                replyInput.value = '';
+                replyForm.classList.remove('active');
+                
+                showNotification('Reply posted successfully!');
+            }
+        }
+
+        // Cancel reply
+        function cancelReply(button) {
+            const replyForm = button.closest('.reply-form');
+            replyForm.classList.remove('active');
+            replyForm.querySelector('.reply-input').value = '';
+        }
+
+        // Create reply element
+        function createReplyElement(text) {
+            const replyDiv = document.createElement('div');
+            replyDiv.className = 'comment-item';
+            
+            replyDiv.innerHTML = `
+                <div class="comment-header">
+                    <div class="commenter-avatar">YU</div>
+                    <div class="commenter-info">
+                        <h6>You</h6>
+                        <span class="comment-date">Just now</span>
+                    </div>
+                    <div class="comment-actions">
+                        <button class="action-btn like-btn" onclick="toggleLike(this)">
+                            ❤️ <span>0</span>
+                        </button>
+                    </div>
+                </div>
+                <div class="comment-text">${text}</div>
+            `;
+            
+            return replyDiv;
+        }
+
+        // Sort comments functionality
+        function initializeCommentSorting() {
+            const sortSelect = document.getElementById('sortComments');
+            
+            sortSelect.addEventListener('change', (e) => {
+                const sortType = e.target.value;
+                const commentsContainer = document.getElementById('commentsContainer');
+                const comments = Array.from(commentsContainer.children);
+                
+                comments.sort((a, b) => {
+                    const aTimestamp = parseInt(a.getAttribute('data-timestamp'));
+                    const bTimestamp = parseInt(b.getAttribute('data-timestamp'));
+                    
+                    switch (sortType) {
+                        case 'oldest':
+                            return aTimestamp - bTimestamp;
+                        case 'popular':
+                            const aLikes = parseInt(a.querySelector('.like-btn span').textContent);
+                            const bLikes = parseInt(b.querySelector('.like-btn span').textContent);
+                            return bLikes - aLikes;
+                        case 'newest':
+                        default:
+                            return bTimestamp - aTimestamp;
+                    }
+                });
+                
+                comments.forEach(comment => {
+                    commentsContainer.appendChild(comment);
+                });
+            });
+        }
+
+        // Update comment count
+        function updateCommentCount() {
+            const commentCount = document.getElementById('commentCount');
+            const comments = document.querySelectorAll('#commentsContainer > .comment-item');
+            commentCount.textContent = comments.length;
+        }
+
+        // Get time ago string
+        function getTimeAgo(timestamp) {
+            const now = Date.now();
+            const diff = now - timestamp;
+            const minutes = Math.floor(diff / 60000);
+            const hours = Math.floor(diff / 3600000);
+            const days = Math.floor(diff / 86400000);
+            
+            if (minutes < 1) return 'Just now';
+            if (minutes < 60) return `${minutes} minute${minutes > 1 ? 's' : ''} ago`;
+            if (hours < 24) return `${hours} hour${hours > 1 ? 's' : ''} ago`;
+            return `${days} day${days > 1 ? 's' : ''} ago`;
+        }
+
+       
+
+        // Smooth scrolling for navigation links
+        function initializeSmoothScrolling() {
+            const navLinks = document.querySelectorAll('.nav-links a');
+            
+            navLinks.forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const targetId = link.getAttribute('href').substring(1);
+                    const targetElement = document.getElementById(targetId);
+                    
+                    if (targetElement) {
+                        targetElement.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'start'
+                        });
+                    }
+                });
+            });
+        }
+
+        // Initialize all functionality when DOM is loaded
+        document.addEventListener('DOMContentLoaded', () => {
+            initializeFilters();
+            initializeCardEffects();
+            initializeSmoothScrolling();
+            initializeCommentForm();
+            initializeCommentSorting();
+            updateCommentCount();
+        });
+
+        // Add scroll effect to header
+        window.addEventListener('scroll', () => {
+            const header = document.querySelector('.header');
+            if (window.scrollY > 100) {
+                header.style.background = 'rgba(10, 10, 15, 0.95)';
+            } else {
+                header.style.background = 'rgba(10, 10, 15, 0.9)';
+            }
+        });
+    </script>
+</body>
+</html>
